@@ -32,6 +32,21 @@ std::vector<std::string> splitRecord_withStringStream(const std::string& record,
 	return fields;
 }
 
+int getAverageLikesOnTweet(const std::vector<TweetRecord>& records)
+{
+	double averageLikes{}; //similar to = 0.0
+
+	double sum = 0.0; 
+	for (const auto& currentRecord : records)
+	{
+		sum += currentRecord.nLikes;
+	}
+
+	averageLikes = sum / records.size(); 
+	return (int)averageLikes; 
+
+}
+
 int main()
 {
 	//let's use an "absolute filepath" to read the input file 
@@ -45,12 +60,23 @@ int main()
 	
 	std::string currentLine; 
 
+	std::vector<TweetRecord> records; 
+
+	//auto splitTokens = splitRecord_withStringStream("FirstName MiddleName LastName", ' ');
+
 	while (std::getline(inputFile, currentLine))
 	{
+
 		std::cout << currentLine << "\n\n\n";
 
 		auto splitRecord = splitRecord_withStringStream(currentLine, ',');
 		
+		if (splitRecord.size() != 6)
+		{
+			std::cout << "The number of fields is NOT as expected (6)\n";
+			__debugbreak(); 
+		}
+
 
 		TweetRecord currentRecord =
 		{
@@ -59,12 +85,14 @@ int main()
 			splitRecord[2],
 			splitRecord[3],
 			splitRecord[4],
-			std::stoi(splitRecord[5])
+			std::stoi(splitRecord[5]) //beware of "invalid stoi argument errors" here 
 			//std::stoi(splitRec)
 		};
 
-		int a; 
+		records.push_back(currentRecord);
 	}
+
+	std::cout << "Average like counts is: " << getAverageLikesOnTweet(records) << "\n";
 
 	//do data processing below: 
 }
